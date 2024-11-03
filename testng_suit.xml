@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="testng_suite">
+	<parameter name="browser" value="firefox" />
+	<test thread-count="5" name="Test">
+		<classes>
+			<class name="pagesTest.HomePageTest" />
+		</classes>
+	</test>
+</suite>
+<!-- To create this Test Suit: Project .... Right click .... TestNG .... Covert To TestNG -->
+<!-- When we use Test Suit, we don't have relation with browser of config.properties file -->
