@@ -18,7 +18,8 @@ public class HomePage {
 	
 	@FindBy(xpath = "//em[@id='cms-homepage-header-logo-unauth' and @class='cms-icon cms-sprite-loggedout ms-3']")
 	WebElement logo;
-		
+	
+	// We didn't use it today, will do in next class
 	@FindBy(id="cms-login-userId")
 	WebElement userId;
 	
