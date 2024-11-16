@@ -22,6 +22,15 @@
 			<artifactId>testng</artifactId>
 			<version>7.10.2</version>
 		</dependency>
+
+		<!-- download from bonigarcia -->
+		<!-- when we use webdrivermanager, physical driver is not necessary -->
+		<!-- when we add a new dependency, don't build the framework, rather update project from maven -->
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>5.9.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -44,5 +53,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>

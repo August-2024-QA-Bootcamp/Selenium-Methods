@@ -7,6 +7,13 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 
+import net.bytebuddy.asm.MemberSubstitution.FieldValue;
+
+// new, you have to manually write it to get access of common actions
+// this is possible when they are static in nature, * means all
+// This is called static import
+import static common.CommonActions.*;
+
 public class HomePage {
 	WebDriver driver;
 
@@ -43,59 +50,107 @@ public class HomePage {
 	@FindBy(className = "cms-newuser-reg")
 	WebElement newUserRegistration;
 	
-	@FindBy(className = "cms-icon cms-sprite-loggedout ms-3")
-	WebElement logoFailed;
-	
 	// 3rd way to create a WebElement with "By" Class: 
 	// Not common, here I used "unlock" web element from the home page
 	// instead of xpath, we can use id, name, class etc as locator.
 	// By unlock = By.id("cms-unlock-account");
 	By unlock = By.xpath("//a[@id='cms-unlock-account']");
 	
+	// To Test implicitly wait
+	@FindBy(className = "newuser-reg")
+	WebElement incorrectNewUserRegistration;
 	
-
+	@FindBy(xpath = "//label[@id='cms-label-tc']")
+	WebElement termsAndCondition;
+	
+	@FindBy(xpath = "//button[text() = 'Login' and @id='cms-login-submit']")
+	WebElement loginButton;
+	
 	public void clickLogo() {
+		// common method 'clickElement()' is not used here
 		logo.click();
 	}
 
 	public void clickForgotUserId() throws InterruptedException {
+		// common method 'pause()' is not used here
 		Thread.sleep(4000);
+		// common method 'clickElement()' is not used here
 		forgotUserId.click();
+		// common method 'pause()' is not used here
 		Thread.sleep(4000);
 	}
 
 
 	// We used try-catch block to handle exception in this method
 	public void clickUserId() {
+		// common method 'pause()' is not used here
 		try {
 			Thread.sleep(4000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		userId.click();
-		try {
-			Thread.sleep(4000);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// common method 'clickElement()' is used from here
+		clickElement(userId);
+		// common method 'pause()' is used here
+		pause(3000);
 	}
 	
 	public void clickPassword() {
-		password.click();
+		clickElement(password);
+		pause(3000);
 	}
 	
 	public void clickNewUserRegistration() {
-		newUserRegistration.click();
-	}
-	
-	public void clickLogoFailed() {
-		logoFailed.click();
+		clickElement(newUserRegistration);
+		pause(3000);
 	}
 	
 	// Not common, just for your reference
 	public void clickUnlock() throws InterruptedException {
 		driver.findElement(unlock).click();
+		pause(3000);
+	}
+	
+	// How to test implicitlyWait()? or
+	// How to show the exception: NoSuchElementException
+	public void clickIncorrectNewUserRegistration() {
+		pause(3000);
+		clickElement(incorrectNewUserRegistration);		
+	}
+	
+	// We are using sendKeys() method to input the text in userId field
+	public void inputTextInUserIdField () {
+		pause(3000);
+		userId.sendKeys("August 2024 QA");
+		pause(3000);
+	}
+	
+	// We are using 3 common actions here -- click(), pause(), inputText()
+	public void inputTextInUserIdAndPasswordFieldThenClickIAgreeAndFinallyToTheLoginButton() {
+		pause(3000);
+		inputText(userId, "enthrall_12");
+		inputText(password, "OnthrallTest@1234");
+		pause(3000);
+		clickElement(termsAndCondition);
+		pause(3000);
+		clickElement(loginButton);
+		pause(3000);
+	}
+	
+	// Alternate of above method {Raw Code, some people like to use this way}
+	// We can use a web element directly in the method, that is also common
+	// we don't need to create "webElement" and "common method"
+	public void useOfByClassInLoginProcess() throws InterruptedException {
+		Thread.sleep(3000);
+		driver.findElement(By.name("user-d")).sendKeys("enthrall_12");
+		driver.findElement(By.name("pass-d")).sendKeys("OnthrallTest@1234");
+		Thread.sleep(4000);
+		driver.findElement(By.xpath("//label[@id='cms-label-tc']")).click();
+		Thread.sleep(4000);
+		driver.findElement(By.xpath("//button[text() = 'Login' and @id='cms-login-submit']")).click();
 		Thread.sleep(4000);
 	}
+
+	
 
 }
