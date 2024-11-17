@@ -45,6 +45,8 @@ public class BaseClass {
 		driver = new ChromeDriver();
 		
 		// For Firefox Driver
+		// Menubar -- help -- About Firefox -- see version and what bit is in your system
+		// 132.0.2 (64-bit), most updated version is downloaded
 		// System.setProperty("webdriver.gecko.driver", "./driver/geckodriver.exe");
 		// driver = new FirefoxDriver();
 		
