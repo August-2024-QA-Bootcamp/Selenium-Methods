@@ -11,97 +11,68 @@ import org.testng.annotations.BeforeMethod;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import pages.HomePage;
+import utils.Configuration;
+import static utils.IConstant.*;
 
 public class BaseClass {
-	// Why default type is not ok for below 2 line? 
-	// because different package accessibility is not possible for default type
-	public WebDriver driver; // or we can use protected type
-	// public ChromeDriver driver;
-	// public FirefoxDriver driver;
-	// public EdgeDriver driver;
-	public HomePage homePage; // or we can use protected type
+	public WebDriver driver;
+	public HomePage homePage;
+	Configuration configuration;
 	
 	@BeforeMethod	
 	public void setUp() {
-		// First job is to recognize the location of driver from your Framework
-		// right click on chromedriver.exe(windows)/chromedriver(mac) ---> properties ---> copy the location and paste below
-		// System is a Java class and setProperty is a method of System Class		
-		
-		// 1st way, to show the location of chrome driver
-		// This is an absolute path
-		// System.setProperty("webdriver.chrome.driver", "C:\\Users\\Tofael\\eclipse-workspace\\gov.cms.portal.august2024\\driver\\chromedriver.exe");	
-		
-		// 2nd way, to show the location of the chrome driver
-		// This is a dynamic way (relative path)
-		// user.dir means --> System set the property to User Directory, hence till the project
-		// System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "/driver/chromedriver.exe");
-		
-		// 3rd and final way, to show the location of chrome driver
-		// This is a dynamic path (relative path)
-		// I will use this one, till end of the course
-		
-		// For Chrome Driver
-		System.setProperty("webdriver.chrome.driver", "./driver/chromedriver.exe");
-		driver = new ChromeDriver();
-		
-		// For Firefox Driver
-		// Menubar -- help -- About Firefox -- see version and what bit is in your system
-		// 132.0.2 (64-bit), most updated version is downloaded
-		// System.setProperty("webdriver.gecko.driver", "./driver/geckodriver.exe");
-		// driver = new FirefoxDriver();
-		
-		// For Edge Driver
-		// System.setProperty("webdriver.edge.driver", "./driver/msedgedriver.exe");		
-		// driver = new EdgeDriver();
-			
-		// We need to add the WebDriverManager dependency in the pom.xml file
-		// When physical driver absent, or driver is not  working, because of version issue, then you can use WebDriverManager
-		// WebDriverManager doesn't need any physical driver
-		// From below line, the most updated version of Chrome browser will be initialized, when no version is mentioned	
-		
-		// WebDriverManager.chromedriver().setup();
-		// driver = new ChromeDriver();
-		
-		// WebDriverManager.firefoxdriver().setup();
-		// driver = new FirefoxDriver();
-
-		// WebDriverManager.edgedriver().setup();
-		// driver = new EdgeDriver();
-		
-		// present version: 131.0.6778.69
-		// stable version: 131.0.6778.69
-		// older version: 127.0.6533.72, 125.0.6422.78, 124.0.6422.78 [used here]
-		// older version sometimes used for stability of browser, sometime the request from the Authority
-		// if you choose version, then it will use that specific version of driver
-		// WebDriverManager.chromedriver().driverVersion("124.0.6422.78").setup();
-		// driver = new ChromeDriver();
-		
-		// maximize method is used to maximize the window ---> mostly used
+		configuration = new Configuration();
+		initDriver();
 		driver.manage().window().maximize();
-		// We can also use fullscreen() instead of maximize() method
-		// while using fullscreen method, move driver. get before fullscreen method
-		// driver.manage().window().fullscreen();
-		// HTTP cookies are small blocks of data created by a web server while a user is browsing a website
-		// deleteAllCookies do delete the cookies
 		driver.manage().deleteAllCookies();
-		// get() is used to access the url
-		driver.get("https://portal.cms.gov/portal/");
-		// PageLoadTimeout is used for wait to load the page for curtain amount of time
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
-		// Implicitly wait is used to wait for each web element
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));		
-		homePage = new HomePage(driver);
+		driver.get(configuration.getProperties(URL));
+		// How can we convert a String to Long type
+		long pageLoadWait = Long.parseLong(configuration.getProperties(PAGELOAD_WAIT));
+		long implicitlyWait = Long.parseLong(configuration.getProperties(IMPLICITLY_WAIT));		
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoadWait));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitlyWait));		
+		initClass();
 	}
 	
+	public void initDriver() {
+		String browserName = configuration.getProperties(BROWSER);
+		
+		switch (browserName) {
+		case CHROME:
+			System.setProperty("webdriver.chrome.driver", "./driver/chromedriver.exe");
+			driver = new ChromeDriver();
+			break;
+
+		case FIREFOX:
+			System.setProperty("webdriver.gecko.driver", "./driver/geckodriver.exe");
+			driver = new FirefoxDriver();
+			break;
+			
+		case EDGE:
+			System.setProperty("webdriver.edge.driver", "./driver/msedgedriver.exe");		
+			driver = new EdgeDriver();
+			break;
+			
+		default:
+			WebDriverManager.chromedriver().setup();
+			driver = new ChromeDriver();
+			break;
+		}				
+	}
+	
+	public void initClass() {
+		homePage = new HomePage(driver);
+	}
+		
 	@AfterMethod
 	public void tearUp() {
 		driver.quit();
 	}
 	
-	
-	
-	
-	
-	
+	// create config.properties file in src/main/resources
+	// create utils package
+	// Inside utils, create enum Constant, Interface IConstant, Configuration class
+	// Bring changes in Base class
+	// static import necessary for ---> import static utils.IConstant.*	
 
 }
