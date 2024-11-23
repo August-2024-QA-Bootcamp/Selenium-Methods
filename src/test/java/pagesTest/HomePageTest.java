@@ -169,12 +169,6 @@ public class HomePageTest extends BaseClass {
 		homePage.use_of_isEnabled_in_login();
 	}
 	
-	
-	
-	/*	
-	
-	
-	
 	@Test
 	public void getMethodsOfThePageTest() {
 		homePage.getMethodsOfThePage();
@@ -194,11 +188,5 @@ public class HomePageTest extends BaseClass {
 	public void use_of_clear_in_login_test() {
 		homePage.use_of_clear_in_login();
 	}
-	
-	
-	 */
-	
-	
-	
 
 }

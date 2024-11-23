@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
 
 import net.bytebuddy.asm.MemberSubstitution.FieldValue;
 
@@ -84,6 +85,7 @@ public class HomePage {
 	@FindBy(tagName = "header")
 	WebElement headerTag;
 	
+
 	@FindBy(css = "em.cms-icon.cms-sprite-loggedout.ms-3")
 	WebElement logoCSS;
 
@@ -349,6 +351,87 @@ public class HomePage {
 		clickElement(loginButton);
 		pause(3000);
 	}
+	
+	// In real time scenario we do below test at the beginning of a page, 
+	// but by using common action, not by following below codes
+	public void getMethodsOfThePage() {
+		String actual = driver.getTitle();
+		System.out.println("Title of the Page is: " + actual); // this line is not necessary
+		String expected = "CMS Enterprise Portal";
+		Assert.assertEquals(actual, expected, "Title doesn't match up");
+		// if the Assertion [validation] fail, "Title doesn't match up" will show up
+		
+		// getCurrentUrl() is not used in homepage/landing page
+		// if we direct to another page, then we have to use it
+		String currentURL = driver.getCurrentUrl();
+		System.out.println("Current URL: " + currentURL);
+		String expectedURL= "https://portal.cms.gov/portal/";
+		Assert.assertEquals(currentURL, expectedURL, "The driver failed to direct at right URL");
+		
+		// use of getText() in "login button"
+		String actualTextPresntInTheWebElement = loginButton.getText();
+		System.out.println("Text Present as: " + actualTextPresntInTheWebElement);
+		String expectedTextPresntInTheWebElement = "Login";
+		Assert.assertEquals(actualTextPresntInTheWebElement, expectedTextPresntInTheWebElement, "The text present in the WebElement doesn't match");	
+	}
+	
+	// This is the first method used during automation framework
+	// what is title?
+	// what is the url?
+	// is logo displayed?
+	// here, method coming from common action
+	public void newUserRegistrationPageValidation() {
+		elementDisplayed(logo);
+		verifyTitle(driver, "CMS Enterprise Portal");
+		verifyCurrentUrl(driver, "https://portal.cms.gov/portal/");
+		elementEnabled(newUserRegistration);
+		verifyTextOfTheWebElement(newUserRegistration, "New User Registration");
+		clickElement(newUserRegistration);
+		pause(5000);
+		verifyTitle(driver, "CMS Enterprise Portal - New User Registration");
+		verifyCurrentUrl(driver, "https://portal.cms.gov/portal/newuserregistration");
+	}
+	
+	// Here We used User ID field
+	// getAttribute() method actually give us, the value of the Attribute, 
+	// raw use, in next method we will use from common action
+	public void use_of_getAttribute_method () {
+		elementSelected(userId);
+		pause(3000);
+		String ml = userId.getAttribute("maxlength");
+		System.out.println("The value of the maxlength attribute is: " + ml);
+		// another example
+		String ph = userId.getAttribute("placeholder");
+		System.out.println("The value of the placeholder attribute is: " + ph);
+	}
+	
+	// use of clear()
+	public void use_of_clear_in_login() {
+		pause(3000);
+		elementDisplayed(userId);
+		inputText(userId, "August 2024");
+		pause(3000);
+		clearTextFromTheField(userId);
+		pause(3000);
+		inputText(userId, "enthrall_12");
+		pause(3000);
+		elementDisplayed(password);
+		inputText(password, "Abul Biri");
+		pause(3000);
+		clearTextFromTheField(password);
+		pause(3000);
+		inputText(password, "OnthrallTest@1234");
+		pause(3000);
+		clickElement(termsAndCondition);
+		pause(3000);
+		elementSelected(termsAndCondition);
+		pause(3000);
+		elementEnabled(loginButton);
+		verifyTextOfTheWebElement(loginButton, "Login"); // new
+		clickElement(loginButton);
+		pause(3000);
+	}
+		
 
 		
 	
