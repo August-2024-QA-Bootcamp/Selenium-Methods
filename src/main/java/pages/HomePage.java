@@ -1,19 +1,24 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 
-import net.bytebuddy.asm.MemberSubstitution.FieldValue;
 
 // new, you have to manually write it to get access of common actions
 // this is possible when they are static in nature, * means all
 // This is called static import
 import static common.CommonActions.*;
+
+import java.time.Duration;
+import java.util.Set;
 
 public class HomePage {
 	WebDriver driver;
@@ -88,6 +93,12 @@ public class HomePage {
 
 	@FindBy(css = "em.cms-icon.cms-sprite-loggedout.ms-3")
 	WebElement logoCSS;
+	
+	@FindBy(xpath = "//span[text()='Help']")
+	WebElement help;
+	
+	@FindBy(xpath = "//h1[text()='CMS Enterprise Portal - Help Center']")
+	WebElement helpPageHeader;
 
 	public void clickLogo() {
 		// common method 'clickElement()' is not used here
@@ -411,14 +422,14 @@ public class HomePage {
 		elementDisplayed(userId);
 		inputText(userId, "August 2024");
 		pause(3000);
-		clearTextFromTheField(userId);
+		clearTextFromTheField(userId); // new here
 		pause(3000);
 		inputText(userId, "enthrall_12");
 		pause(3000);
 		elementDisplayed(password);
 		inputText(password, "Abul Biri");
 		pause(3000);
-		clearTextFromTheField(password);
+		clearTextFromTheField(password); // new here
 		pause(3000);
 		inputText(password, "OnthrallTest@1234");
 		pause(3000);
@@ -431,8 +442,91 @@ public class HomePage {
 		clickElement(loginButton);
 		pause(3000);
 	}
+	
+	// use of navigate()
+	// mostly important interview question, never used in framework or in real time environment
+	public void use_of_navigate_method () {
+		pause(3000);
+		driver.navigate().to("https://www.mountsinai.org/");
+		pause(3000);
+		driver.navigate().back();
+		pause(3000);
+		driver.navigate().forward();
+		pause(3000);
+		driver.navigate().refresh();
+		pause(3000);
+	}
+	
+	// Very very important interview question
+	public void use_of_mouse_hoverAction_on_ourLocations () {
+		pause(3000);
+		// below process we don't use in framework
+		driver.navigate().to("https://www.mountsinai.org/");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20)); 
+		// use of normalize-space(text()) as an xpath is new here, please have a look
+		WebElement ourLocations = driver.findElement(By.xpath("//a[normalize-space(text())='Our Locations' and @class='hidden-xs dropdown']"));
+		// for mouse Hover Action
+		pause(3000);
+		Actions actions = new Actions(driver);
+		actions.moveToElement(ourLocations).build().perform();
+		pause(3000);
+		// Then click on Mount Sinai Hospital from the list
+		// new way to create xpath by parent [practice it]
+		driver.findElement(By.xpath("//a[text()='The Mount Sinai Hospital']//parent::li[@class='notranslate']")).click();
+		pause(3000);
+		verifyCurrentUrl(driver, "https://www.mountsinai.org/locations/mount-sinai");		
+	}
+	
+	public void switch_between_window() {
+		elementDisplayed(help);
+		clickElement(help); // a child window will open
+		pause(3000);
+		// getWindowHandle() method handle only one window [parent]
+		// getWindowHandles() method handle more than one window
+		Set<String> allWindowHandles = driver.getWindowHandles(); 
+		// Extract Parent and child window from all window handles
+		String parent = (String)allWindowHandles.toArray()[0]; 
+		String child = (String)allWindowHandles.toArray()[1];
+		driver.switchTo().window(child); // how switch to a child window
+		pause(3000);
+		verifyTextOfTheWebElement(helpPageHeader, "CMS Enterprise Portal - Help Center");
+		pause(3000);
+	}
+	
+	// Drop down discussed in Forgot User Id Page
 		
-
+	// use of Keys.ENTER, raw code here.
+	public void use_of_sendKeys_method_then_click_by_enter_key_of_the_laptop_01 () {
+		pause(3000);
+		driver.findElement(By.id("cms-login-userId")).sendKeys("August 2024", Keys.ENTER);
+		pause(3000);
+	}
+	
+	// use of Keys.ENTER, common method inputTextThenClickEnter() used here
+	public void use_of_sendKeys_method_then_click_by_enter_key_of_the_laptop_02 () {
+		pause(3000);
+		elementDisplayed(userId);
+		inputTextThenClickEnter(userId, "August 2024 QA");
+		pause(3000);
+	}
+	
+	// use of Keys.RETURN , common method used
+	public void use_of_sendKeys_method_then_click_by_return_key_of_the_laptop () {
+		elementDisplayed(userId);
+		inputTextThenClickEnter(userId, "enthrall_12");
+		pause(4000);
+		elementDisplayed(password);
+		inputTextThenClickReturn(password, "OnthrallTest@1234"); // Used here
+		pause(4000);
+	}
+	
+	// use of Keys.TAB, common method used
+	public void use_of_sendKeys_method_then_click_by_tab_key_of_the_laptop () {
+		elementDisplayed(userId);
+		inputTextThenClickTab(userId, "enthrall_12");  // the focus will go to next input "Password" field
+		pause(4000);
+	}
 		
 	
 	

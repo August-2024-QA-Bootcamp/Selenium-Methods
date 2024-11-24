@@ -188,5 +188,111 @@ public class HomePageTest extends BaseClass {
 	public void use_of_clear_in_login_test() {
 		homePage.use_of_clear_in_login();
 	}
+	
+	@Test()
+	public void use_of_navigate_method_test () {
+		homePage.use_of_navigate_method ();
+	}
+	
+	@Test()
+	public void use_of_mouse_hoverAction_on_ourLocations_test () {
+		homePage.use_of_mouse_hoverAction_on_ourLocations ();
+	}
+	
+	@Test()
+	public void switch_between_window_test() {
+		homePage.switch_between_window();
+	}
+	
+	@Test()
+	public void use_of_sendKeys_method_then_click_by_enter_key_of_the_laptop_test_01 () {
+		homePage.use_of_sendKeys_method_then_click_by_enter_key_of_the_laptop_01();
+	}
+	
+	@Test()
+	public void use_of_sendKeys_method_then_click_by_enter_key_of_the_laptop_test_02 () {
+		homePage.use_of_sendKeys_method_then_click_by_enter_key_of_the_laptop_02();
+	}
+	
+	@Test()
+	public void use_of_sendKeys_method_then_click_by_return_key_of_the_laptop_test () {
+		homePage.use_of_sendKeys_method_then_click_by_return_key_of_the_laptop();
+	}
+	
+	@Test()
+	public void use_of_sendKeys_method_then_click_by_tab_key_of_the_laptop_test () {
+		homePage.use_of_sendKeys_method_then_click_by_tab_key_of_the_laptop();
+	}
+	
+	
+	/*
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Test()
+	public void alternate_of_click_method_test() {
+		homePage.alternate_of_click_method();
+	}
+	
+	@Test()
+	public void alternate_of_send_keys_method_test() {
+		homePage.alternate_of_send_keys_method();
+	}
+	
+	@Test()
+	public void login_process_by_JavascriptExecutor_test() {
+		homePage.login_process_by_JavascriptExecutor();
+	}
+	
+	// it will fail
+	@Test()
+	public void how_to_handle_hidden_element_by_regular_selenium_method_test() {
+		homePage.how_to_handle_hidden_element_by_regular_selenium_method();
+	}
+	
+	@Test()
+	public void how_to_handle_hidden_element_by_javascriptExecutor_test() {
+		homePage.how_to_handle_hidden_element_by_javascriptExecutor();
+	}
+	
+	@Test()
+	public void use_of_explicitly_wait_01_test() {
+		homePage.use_of_explicitly_wait_01();
+	}
+	
+	@Test()
+	public void use_of_explicitly_wait_02_test() {
+		homePage.use_of_explicitly_wait_02();
+	}
+	
+	@Test()
+	public void use_of_explicitly_wait_03_test(){
+		homePage.use_of_explicitly_wait_03();
+	}
+	
+	@Test()
+	public void use_of_explicitly_wait_04_test(){
+		homePage.use_of_explicitly_wait_04();
+	}
+	
+	@Test()
+	public void use_of_explicitly_wait_05_test(){
+		homePage.use_of_explicitly_wait_05();
+	}
+	 */
+	
+	
+	
+	
+	
 
 }
