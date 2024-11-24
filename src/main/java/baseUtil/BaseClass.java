@@ -10,6 +10,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import pages.ForgotUserId;
 import pages.HomePage;
 import utils.Configuration;
 import static utils.IConstant.*;
@@ -18,6 +19,7 @@ public class BaseClass {
 	public WebDriver driver;
 	public HomePage homePage;
 	Configuration configuration;
+	public ForgotUserId forgotUserId;
 	
 	@BeforeMethod	
 	public void setUp() {
@@ -62,6 +64,7 @@ public class BaseClass {
 	
 	public void initClass() {
 		homePage = new HomePage(driver);
+		forgotUserId = new ForgotUserId(driver);
 	}
 		
 	@AfterMethod
