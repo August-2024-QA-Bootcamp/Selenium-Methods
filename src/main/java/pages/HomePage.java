@@ -1,6 +1,8 @@
 package pages;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,11 +19,17 @@ import org.testng.Assert;
 // This is called static import
 import static common.CommonActions.*;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.io.File;
 import java.time.Duration;
 import java.util.Set;
 
 public class HomePage {
 	WebDriver driver;
+	JavascriptExecutor js;
+	Actions actions;
 
 	// parameterized constructor initialized when class in instantiated [object
 	// created]
@@ -30,6 +38,8 @@ public class HomePage {
 		// PageFactory class help to instantiate WebElements
 		// Important interview question
 		PageFactory.initElements(driver, this);
+		 js = (JavascriptExecutor)driver;
+		 actions = new Actions(driver);
 	}
 
 	@FindBy(xpath = "//em[@id='cms-homepage-header-logo-unauth' and @class='cms-icon cms-sprite-loggedout ms-3']")
@@ -527,7 +537,248 @@ public class HomePage {
 		inputTextThenClickTab(userId, "enthrall_12");  // the focus will go to next input "Password" field
 		pause(4000);
 	}
+	
+	// alternate of click()
+	// very very  Important interview question + they ask you to write the code in MS word or verbally
+	// JavaScriptExecutor is an Interface that helps to execute JavaScript through Selenium Webdriver. 
+	// so, practice it by paper pen, then in ms word
+	// when you see error message "click intercepted" or "ElementNotInteractableException", you use it
+	// login button used
+	public void alternate_of_click_method() {
+		WebElement loginBttn = driver.findElement(By.xpath("//button[contains(@id, 'submit')]")); 
+		// in the above line we created the webElement, we can also write it like line 60-90
+		// JavascriptExecutor js = (JavascriptExecutor)driver;
+		// We wrote above line at the beginning of Class
+		js.executeScript("arguments[0].click()", loginBttn); // memorize the content
+		// arguments[0] means, find the web element of index 0, means first occurrence
+		pause(4000);
+	}
+	
+	// interview question
+	// how to input text inside a field by JavascriptExecutor, alternate of sendKeys()
+	// user id field is used to input text
+	public void alternate_of_send_keys_method() {
+		pause(3000);
+		// JavascriptExecutor js = (JavascriptExecutor)driver;
+		js.executeScript("arguments[0].value='August 2024 QA' ", userId); // userId from line 48
+		pause(3000);
+	}
+	
+	// TODO: Nasir Fail, why? Test case passed but show failed after clicking button, may be the executescript lost the memory of puttin gvalue in fields
+	// login process by JavascriptExecutor
+	// alternative of click(), sendKeys() is used
+	public void login_process_by_JavascriptExecutor_common_method(){
+		elementDisplayed(userId);
+		inputTextUsingJavascriptExecutor(driver, "arguments[0].value='enthrall_12'", userId);
+		// inputText(userId, "enthrall_12");
+		pause(3000);
+		elementDisplayed(password);
+		inputTextUsingJavascriptExecutor(driver, "arguments[0].value='OnthrallTest@1234'", password);
+		// inputText(password, "OnthrallTest@1234");
+		pause(3000);
+		clickUsingJavascriptExecutor(driver, termsAndCondition);
+		pause(3000);
+		elementEnabled(loginButton);
+		verifyTextOfTheWebElement(loginButton, "Login");
+		clickUsingJavascriptExecutor(driver, loginButton);
+		pause(3000);
+	}
+	
+	// it will fail, because selenium can't handle hidden element
+	public void how_to_handle_hidden_element_by_regular_selenium_method() {
+		pause(3000);
+		driver.navigate().to("https://www.letskodeit.com/practice");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		pause(3000);
+		// identify the 'Hide' element and click on it [line 589]
+		// The search field will be disappeared, but we can pass value on it, as we got the info before
+		driver.findElement(By.id("hide-textbox")).click();
+		pause(4000);
+		// identify element and set/input text or value (line 540) by selenium
+		driver.findElement(By.xpath("//input[@id='displayed-text']")).sendKeys("Hello");
+		// it will fail by below error message
+		// org.openqa.selenium.ElementNotInteractableException: element not interactable
+		// whenever you find element not interactable in console, that is for sure a hidden element	
+	}
+	
+	// it will pass
+	public void how_to_handle_hidden_element_by_javascriptExecutor() {
+		pause(3000);
+		driver.navigate().to("https://www.letskodeit.com/practice");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		pause(3000);
+		// identify the 'Hide' element and click on it [line 589]
+		// The search field will be disappeared, but we can pass value on it, as we got the info before
+		driver.findElement(By.id("hide-textbox")).click();
+		pause(4000);
+		// identify element and set/input text or value (line 592) by selenium
+		// identify element and set/input text or value (line 612) by JavascriptExecutor
+		WebElement searchField = driver.findElement(By.xpath("//input[contains(@id, 'displayed')]"));
+		js.executeScript("arguments[0].value='Hello'", searchField);
+		pause(3000);	
 		
+		// Extra Code
+		// save below code for getTitle, getText of what written in field, Refresh by JavscriptExecutor
+		// You can really know what was the text written by the JavascriptExecutor		
+		// Not important and not related below
+		// Extra code, alternative of  getText() 
+		// Extra not related to hidden elements and not important
+		// To find out what you send as text, not necessary for this scenario
+		// Just save the below code for future reference
+		String s = (String) js.executeScript("return document.getElementById('displayed-text').value");
+		System.out.print("Value entered in hidden field: " + s + "\n");
+		
+		// Not important
+		// How to get title of the page by JavaScript
+		// How to read a JavaScript variable in Selenium WebDriver?
+		// How to getTitle by Javascript, 
+		String sTitle = js.executeScript("return document.title;").toString(); // fetching page title by javascript
+		System.out.println("The title of the Page is: "+sTitle);	
+		
+		// Not related with this test
+		// How to refresh by Javascript, 
+		js.executeScript("history.go(0)"); // To do refresh by Javascript		
+	}
+	
+	// important interview question
+	// 1st way: Scroll by Actions class
+	// scroll bottom and then top
+	public void use_of_scroll_down_and_up_by_actions_class () {
+		pause(5000);
+		// for Scroll Down using Actions class, to go at the bottom of the page
+		actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+		pause(5000);
+		// for Scroll Up using Actions class at the top of the page
+		actions.keyDown(Keys.CONTROL).sendKeys(Keys.HOME).perform();
+		pause(5000);
+		// instead of END and HOME, we can use Keys.UP or Keys.Down
+		// But it doesn't change much but the test case passes, we will not use them					
+	}
+	
+	// not important, just to know
+	public void use_of_scroll_down_and_scroll_up_by_robot_class () throws InterruptedException, AWTException {
+		// For some reason, they are not going completely Up or Down
+		Robot robot = new Robot();
+		// Scroll Down using Robot class
+		robot.keyPress(KeyEvent.VK_PAGE_DOWN); // Constant for the PAGE_DOWN virtual key [VK].
+		robot.keyRelease(KeyEvent.VK_PAGE_DOWN);
+		pause(5000);
+		// Scroll Up using Robot class
+        robot.keyPress(KeyEvent.VK_PAGE_UP); // Constant for the PAGE_UP virtual key. 
+        robot.keyRelease(KeyEvent.VK_PAGE_UP);
+        pause(5000);		
+	}
+	
+	// important interview question
+	// 2nd way: Scroll by javascriptExecutor
+	// scroll in a certain position (not at the Bottom or Top)
+	public void use_of_scroll_down_and_up_In_A_Certain_Pixel_by_javascriptExecutor () {
+		pause(3000);
+		// This will scroll down the page by 1000 pixel vertically
+		// here 0 is x axis [horizontal], 1000 y axis [vertical]
+		// you choose your pixel accordingly to reach to that web element
+		((JavascriptExecutor)driver).executeScript("window.scrollBy(0, 990)", "");
+		// You can change the value to any pixel, and put your own to see the web element you wanna test
+		pause(3000);
+		js.executeScript("window.scrollBy(0, -990)", ""); // scroll up till 1000px, but not necessary based on your test
+		// minus when it goes opposite of down
+		pause(3000);
+	}
+	
+	// scroll Into View The Element
+	// This is very very important, standard interview question
+	// This is better to use
+	public void scroll_into_view_the_element() {
+		WebElement enterprisePortal = driver.findElement(By.xpath("//h1[contains(text(), 'Enterprise Portal')]"));
+		WebElement learnMore = driver.findElement(By.xpath("//a[text()='Learn more about Enterprise Portal']"));
+		js.executeScript("arguments[0].scrollIntoView(true)", enterprisePortal);
+		pause(3000);
+		clickUsingJavascriptExecutor(driver, learnMore);
+		pause(3000);
+	}
+	
+	public void scroll_into_view_the_element_by_commonActions() {
+		WebElement enterprisePortal = driver.findElement(By.xpath("//h1[contains(text(), 'Enterprise Portal')]"));
+		WebElement learnMore = driver.findElement(By.xpath("//a[text()='Learn more about Enterprise Portal']"));
+		scrollIntoViewTheElementUsingJavascriptExecutor(driver, enterprisePortal);
+		pause(3000);
+		clickUsingJavascriptExecutor(driver, learnMore);
+		pause(3000);
+	}
+	
+	// very very important for interview
+	public void web_based_alert_accept () {
+		pause(4000);
+		driver.get("http://softwaretestingplace.blogspot.com/2017/03/javascript-alert-test-page.html");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		driver.findElement(By.xpath("//button[contains(text(), 'Try it')]")).click();
+		pause(4000);
+		Alert alert = driver.switchTo().alert();
+		pause(3000);
+		System.out.println("The text present in the alert is: " + alert.getText()); 
+		alert.accept();  // will click on OK button
+		pause(3000);
+		// line 720, not part of the accept function, 
+		// we just added to know about, the text is present in the alert or not,
+		// also if you use it after 721, it might not retrieve the text		
+	}
+	
+	// very very important for interview
+	public void web_based_alert_dismiss () {
+		pause(4000);
+		driver.get("http://softwaretestingplace.blogspot.com/2017/03/javascript-alert-test-page.html");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		driver.findElement(By.xpath("//button[contains(text(), 'Try it')]")).click();
+		pause(4000);
+		Alert alert = driver.switchTo().alert();
+		pause(3000);
+		System.out.println("The text present in the alert is: " + alert.getText());
+		alert.dismiss(); // will click on Cancel button
+		pause(3000);
+	}
+	
+	// Only important for interview
+	public void authentication_pop_up (){
+		pause(3000);	
+		String userName = "admin";
+		String password = "admin";
+		// original one is: "https://the-internet.herokuapp.com/basic_auth";
+		// Updated one is: "https://admin:admin@the-internet.herokuapp.com/basic_auth";
+		String url = "https://" + userName + ":" + password + "@" + "the-internet.herokuapp.com/basic_auth";
+		driver.get(url);
+		pause(3000);
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		pause(3000);
+		
+		// The below part is not part of this test
+		// identify and get text after authentication of pop up
+		String t = driver.findElement(By.tagName("p")).getText(); // we use tag name as a locator in our course
+		// instead above line, we can use verifyTextOfTheWebElement method
+		System.out.println("The Text is: " + t);
+		Assert.assertEquals(t, "Congratulations! You must have the proper credentials."); // actual vs expected
+	}
+	
+	// This is for Enthrall IT photo upload, not needed for CMS
+	public void photoIdUpload() {
+		pause(4000);
+		File pi = new File("./image/personalImage.jpg");
+		WebElement personalImage = driver.findElement(By.xpath("//input[@name='image']"));
+		personalImage.sendKeys(pi.getAbsolutePath());
+		pause(4000);
+		File phid = new File("./image/photoId.png");
+		WebElement photoId = driver.findElement(By.xpath("//input[@name='photo_id']"));
+		photoId.sendKeys(phid.getAbsolutePath());
+		pause(4000);
+	}
+
+	
+
+
 	
 	
 	
