@@ -31,6 +31,24 @@
 			<artifactId>webdrivermanager</artifactId>
 			<version>5.9.2</version>
 		</dependency>
+		<!-- Most commonly used for reporting -->
+		<dependency>
+			<groupId>com.aventstack</groupId>
+			<artifactId>extentreports</artifactId>
+			<version>5.1.2</version>
+		</dependency>
+		<!-- slf4j-simple, slf4j-api is used to remove the error message regarding slf4j in the console -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.16</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>2.0.16</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -292,6 +292,16 @@ public class HomePageTest extends BaseClass {
 		homePage. authentication_pop_up ();
 	}
 	
+	@Test
+	public void  photoIdUpload_common_action_Test() {
+		homePage. photoIdUpload_common_action();
+	}
+	
+	@Test
+	public void  first_name_validation_Test() {
+		homePage. first_name_validation();
+	}
+	
 	
 	/*
 	 	
