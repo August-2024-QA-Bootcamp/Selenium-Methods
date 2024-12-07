@@ -78,7 +78,7 @@ public class BaseClass {
 	// spelling mistake in testng.xml suite, then browser will not match and get the default one
 	// default: WebdriverManager is instantiating the ChromeDriver
 	
-	// If we run test from any TestClass, which browser will run?
+	// If we run test from any TestClass, which browser will run when browser is absent in .config file?
 	// Edge. why? browser is absent in config.properties file, so it will take from @Optional(EDGE)
 	
 	public void initDriver(String browserName) {

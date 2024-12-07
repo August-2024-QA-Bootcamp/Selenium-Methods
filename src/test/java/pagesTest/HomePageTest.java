@@ -293,6 +293,12 @@ public class HomePageTest extends BaseClass {
 	}
 	
 	@Test
+	public void use_of_getAttribute_by_common_method_test () {
+		homePage.use_of_getAttribute_by_common_method();
+	}
+	
+	
+	@Test
 	public void  photoIdUpload_common_action_Test() {
 		homePage. photoIdUpload_common_action();
 	}
@@ -301,16 +307,6 @@ public class HomePageTest extends BaseClass {
 	public void  first_name_validation_Test() {
 		homePage. first_name_validation();
 	}
-	
-	
-	/*
-	 	
-	
-	
-	
-	
-	
-	
 	
 	@Test()
 	public void use_of_explicitly_wait_01_test() {
@@ -337,27 +333,23 @@ public class HomePageTest extends BaseClass {
 		homePage.use_of_explicitly_wait_05();
 	}
 	
+	@Test
+	public void use_of_explicitly_wait_from_common_waits_test(){
+		homePage.use_of_explicitly_wait_from_common_waits();
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Test
+	public void set_a_specific_size_for_window_test(){
+		homePage.set_a_specific_size_for_window();
+	}
 	
 	@Test
 	public void use_of_right_click_action_test () {
 		homePage.use_of_right_click_action ();
 	}
-
+	
 	@Test
-	public void use_of_double_click_action_test () throws InterruptedException {
+	public void use_of_double_click_action_test () {
 		homePage.use_of_double_click_action ();
 	}
 	
@@ -385,6 +377,12 @@ public class HomePageTest extends BaseClass {
 	public void read_any_cell_of_a_row_of_the_table () {
 		homePage.read_any_cell_of_a_row_of_the_table ();
 	}
+	
+
+	
+	/*
+	
+	
 	
 	@Test(enabled = false, priority = 3, groups = {"functionalTest", "sanityTest", "smokeTest", "regressionTest"})
 	public void getMethodsOfThePage03Test() {

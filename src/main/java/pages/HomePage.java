@@ -2,16 +2,20 @@ package pages;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+
+import org.openqa.selenium.Dimension;
 
 import constants.Attribute;
 
@@ -19,6 +23,8 @@ import constants.Attribute;
 // this is possible when they are static in nature, * means all
 // This is called static import
 import static common.CommonActions.*;
+import static common.CommonWaits.*;
+
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -29,8 +35,10 @@ import java.util.Set;
 
 public class HomePage {
 	WebDriver driver;
+	WebDriverWait wait;
 	JavascriptExecutor js;
 	Actions actions;
+	Dimension dimension;
 
 	// parameterized constructor initialized when class in instantiated [object
 	// created]
@@ -39,7 +47,8 @@ public class HomePage {
 		// PageFactory class help to instantiate WebElements
 		// Important interview question
 		PageFactory.initElements(driver, this);
-		 js = (JavascriptExecutor)driver;
+		wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+ 		 js = (JavascriptExecutor)driver;
 		 actions = new Actions(driver);
 	}
 
@@ -414,6 +423,7 @@ public class HomePage {
 		verifyCurrentUrl(driver, "https://portal.cms.gov/portal/newuserregistration");
 	}
 	
+	/*
 	// Here We used User ID field
 	// getAttribute() method actually give us, the value of the Attribute, 
 	// raw use, in next method we will use from common action
@@ -426,6 +436,7 @@ public class HomePage {
 		String ph = userId.getAttribute("placeholder");
 		System.out.println("The value of the placeholder attribute is: " + ph);
 	}
+	*/
 	
 	// use of clear()
 	public void use_of_clear_in_login() {
@@ -764,6 +775,28 @@ public class HomePage {
 		Assert.assertEquals(t, "Congratulations! You must have the proper credentials."); // actual vs expected
 	}
 	
+	// line 776-787 is from 624
+	// Here We used User ID field
+	// getAttribute() method actually give us, the value of the Attribute, 
+	// raw use, in next method we will use from common action
+	public void use_of_getAttribute_method () {
+		elementSelected(userId);
+		pause(3000);
+		String ml = userId.getAttribute("maxlength");
+		System.out.println("The value of the maxlength attribute is: " + ml);
+		// another example
+		String ph = userId.getAttribute("placeholder");
+		System.out.println("The value of the placeholder attribute is: " + ph);
+	}
+	
+	public void use_of_getAttribute_by_common_method () {
+		elementSelected(userId);
+		pause(3000);
+		getAttributeValue(userId, Attribute.MAX_LENGTH);
+		pause(3000);
+		getAttributeValue(userId, Attribute.PLACEHOLDER);
+	}
+	
 	// This is for Enthrall IT photo upload, not needed for CMS
 	public void photoIdUpload() {
 		pause(4000);
@@ -827,7 +860,225 @@ public class HomePage {
 		pause(3000);
 	}
 	
+	// very very important
+	// when the web element always failed in test, use explicitly wait, 
+	// this web site doesn't have complex elements
+	// "login" web element 
+	// using visibilityOfElementLocated() method , Number one, Callled by "By" class
+	// This is a very common scenario in industry to use explicitly wait
+	public void use_of_explicitly_wait_01() {
+		pause(3000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("Submit Login"))).click();
+		pause(3000);
+	}
 	
+	// New User Registration webElement
+	// using elementToBeClickable() method, number two
+	public void use_of_explicitly_wait_02(){
+		pause(3000);
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(), 'New')]"))).click();
+		pause(4000);
+	}
+	
+	// userId webElement
+	// using visibilityOf() method, number three
+	public void use_of_explicitly_wait_03(){
+		pause(3000);
+		wait.until(ExpectedConditions.visibilityOf(userId)).isDisplayed(); // here userId is webElement type
+		inputText(userId, "enthrall_12");
+		pause(3000);
+	}
+	
+	// Try to remember this above 3 conditions-name for interview, most of the time they asked it
+	
+	// Not important, you can use it to practice
+	// "unlock" web element 
+	// using presenceOfElementLocated() method
+	public void use_of_explicitly_wait_04(){
+		pause(3000);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[contains(text(), 'Password')]"))).click();
+		pause(4000);
+	}
+	
+	// Not important, you can use it to practice
+	// "Login Button" web element
+	// using textToBePresentInElement() method
+	// this is not a clickable method, just to recognize the web element
+	public void use_of_explicitly_wait_05(){
+		pause(3000);
+		boolean outcome = wait.until(ExpectedConditions.textToBePresentInElement(loginButton, "Login"));
+		System.out.println(outcome);
+		clickElement(loginButton);
+		pause(4000);
+	}
+	
+	// New User Registration webElement
+	// using commonWaits fir elementToBeClickable() method
+	public void use_of_explicitly_wait_from_common_waits(){
+		pause(4000);
+		waitUntilTheConditionThenClick(driver, newUserRegistration);
+		pause(3000);
+	}
+	
+	// findElements need to do before that
+	public void set_a_specific_size_for_window() {
+		pause(3000);
+		// Will get the size of cms window, get size is different for different computer
+		System.out.println("The size of the CMS screen is: "+ driver.manage().window().getSize());
+		dimension = new Dimension(1000, 700); // (int width, int height)
+		driver.manage().window().setSize(dimension);
+		pause(3000);
+		System.out.println("The set size for the CMS screen is: " + driver.manage().window().getSize());
+		
+		// Extra not related to this method, although you can skip
+		pause(3000);
+		driver.navigate().to("https://www.cvs.com");
+		pause(3000);
+		System.out.println("The set size for the CVS screen is: "+ driver.manage().window().getSize());
+		driver.manage().window().maximize();
+		pause(3000);
+		System.out.println("The set size for the CVS maximize screen is: "+ driver.manage().window().getSize());
+		pause(3000);
+		driver.manage().window().setSize(dimension); // just to show again the set size
+		pause(3000);
+		System.out.println("The set size for the CVS screen is: "+ driver.manage().window().getSize());
+		pause(3000);;
+		driver.manage().window().fullscreen();
+		pause(3000);
+		System.out.println("The set size for the CVS full screen is: "+ driver.manage().window().getSize());	
+	}
+	
+	// only important for interview
+	public void use_of_right_click_action() {
+		pause(3000);
+		driver.get("https://demo.guru99.com/test/simple_context_menu.html");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		WebElement rcButton = driver.findElement(By.xpath("//span[contains(text(), 'right click me')]"));
+		// the below line is to learn
+		actions.moveToElement(rcButton).contextClick().build().perform(); 
+		// right click action done by contextClick()
+		pause(3000);
+		
+		// From Line 827, not part of testing, just completed the scenario
+		// Just keep below code, Can't find the web element for Edit at present, the line 775 is from my collection.
+		// Below 2 is not relevant to right click, just doing some extra, which we know already
+		// Next: I want to click on Edit link on the displayed menu options
+		WebElement edit = driver.findElement(By.xpath("//span[text()='Edit']"));
+		pause(3000);
+		edit.click(); // a "regular click", not a "right click"
+		pause(3000);
+		// Switch to the alert box and click on OK button
+		Alert alert = driver.switchTo().alert();
+		System.out.println("\nAlert Text: " + alert.getText());
+		alert.accept();
+		pause(3000);			
+	}
+	
+	// only important for interview
+	public void use_of_double_click_action() {
+		pause(3000);
+		driver.get("https://demo.guru99.com/test/simple_context_menu.html");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		pause(3000);
+		WebElement dcButton = driver.findElement(By.xpath("//button[text()='Double-Click Me To See Alert']"));
+		actions.doubleClick(dcButton).build().perform();
+		pause(3000);
+		// Not part of the double click action
+		// Switch to the alert box and click on OK button
+		Alert alert = driver.switchTo().alert();
+		System.out.println("\nAlert Text: " + alert.getText());
+		alert.accept();
+		pause(3000);		
+	}
+	
+	// not important
+	public void use_of_drag_and_drop_action () {
+		pause(3000);
+		driver.get("https://demo.guru99.com/test/drag_drop.html");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		// WebElement which needs to drag (Bank Button)
+		WebElement sourceLocator = driver.findElement(By.xpath("//a[contains(text(), 'BA')]")); 
+		// Element where need to be dropped.(In 'Account' field of debit side)
+		WebElement targetLocator = driver.findElement(By.xpath("//ol[contains(@id, 'b')]")); 
+		// We Use Actions class for drag and drop.
+		actions.dragAndDrop(sourceLocator, targetLocator).build().perform();
+		pause(5000);				
+	}
+	
+	// not important
+	public void use_of_slider_action () {
+		pause(3000);	
+		driver.get("https://demoqa.com/slider/");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		// Retrieve WebElemnt 'slider' to perform mouse hover
+		// This is the field where volume is increased
+		WebElement slider = driver.findElement(By.cssSelector("input.range-slider.range-slider--primary"));
+		// Move mouse to x offset 50 i.e. in horizontal direction
+		pause(3000);
+		// to test the slider is working or not
+		// dragAndDropBy (element, int xoffset, int yoffset)
+		actions.dragAndDropBy(slider, 50, 0).build().perform(); 
+		// learn from here, 50 is in pixel which might not match with real volume change, real volume 60
+		pause(5000);
+		// slider.click();
+		System.out.println("Moved slider in horizontal directions");
+	}
+	
+	// How to read the content of a Table 
+	public void read_table () {
+		pause(5000);	
+		driver.get("https://www.amazon.com/");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		pause(5000);	
+		// Scrolled to the end of page
+		actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+		pause(5000);	
+		// The below line will not work for row and cell, we use line 1043 by cssSelector
+		// WebElement table = driver.findElement(By.tagName("table")); // tag as a locator 
+		WebElement table = driver.findElement(By.cssSelector("table.navFooterMoreOnAmazon"));
+		System.out.println(table.getText());
+		pause(5000);		
+	}
+	
+	// How to read the row of a Table 
+	public void read_any_row_of_the_table () {
+		pause(5000);	
+		driver.get("https://www.amazon.com");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(40));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		pause(5000);	
+		actions = new Actions(driver); 
+		actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+		pause(5000);
+		// tr -  table row, nth clild -- row number
+		WebElement row = driver.findElement(By.cssSelector("table.navFooterMoreOnAmazon tr:nth-child(1)")); 
+		System.out.println(row.getText());
+		pause(5000);
+	}
+	
+	// How to read any cell of a row of the Table 
+	public void read_any_cell_of_a_row_of_the_table () {
+		pause(5000);	
+		driver.get("https://www.amazon.com");
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		pause(5000);	
+		//actions = new Actions(driver); 
+		actions.keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+		pause(5000);
+		// tr -  table row, nth clild -- row number, td -- cell
+		WebElement cell = driver.findElement(By.cssSelector("table.navFooterMoreOnAmazon tr:nth-child(1) td:nth-child(7)"));
+		System.out.println(cell.getText());
+		pause(3000);
+	}
+
+
+
 
 	
 
