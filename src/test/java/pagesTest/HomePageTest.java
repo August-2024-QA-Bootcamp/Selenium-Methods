@@ -1,7 +1,14 @@
 package pagesTest;
 
 import java.awt.AWTException;
+import java.time.Duration;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.annotations.Test;
 
 import baseUtil.BaseClass;
@@ -172,8 +179,8 @@ public class HomePageTest extends BaseClass {
 	}
 	
 	@Test
-	public void getMethodsOfThePageTest() {
-		homePage.getMethodsOfThePage();
+	public void getMethodsOfThePageTest01() {
+		homePage.getMethodsOfThePage01();
 	}
 	
 	@Test
@@ -378,25 +385,19 @@ public class HomePageTest extends BaseClass {
 		homePage.read_any_cell_of_a_row_of_the_table ();
 	}
 	
-
-	
-	/*
-	
-	
-	
-	@Test(enabled = false, priority = 3, groups = {"functionalTest", "sanityTest", "smokeTest", "regressionTest"})
-	public void getMethodsOfThePage03Test() {
-		homePage.getMethodsOfThePage03();
+	@Test(enabled = true, priority = 3, groups = {"functionalTest", "sanityTest", "smokeTest", "regressionTest"})
+	public void getMethodsOfThePage02Test() {
+		homePage.getMethodsOfThePage02();
 	}
 	 
 	@Test(enabled = false, priority = 1, groups = {"regressionTest"})
-	public void getMethodsOfThePage04Test() {
-		homePage.getMethodsOfThePage04();
+	public void getMethodsOfThePage03Test() {
+		homePage.getMethodsOfThePage03();
 	}
 	
 	@Test(enabled = false, priority = 2, groups = {"functionalTest", "sanityTest"})
-	public void getMethodsOfThePage05Test() {
-		homePage.getMethodsOfThePage05();
+	public void getMethodsOfThePage04Test() {
+		homePage.getMethodsOfThePage04();
 	}
 	
 	@Test
@@ -404,7 +405,7 @@ public class HomePageTest extends BaseClass {
 		homePage.use_of_expectedExceptions01();
 	}
 	
-	@Test(expectedExceptions = ArithmeticException.class)
+	@Test (expectedExceptions = ArithmeticException.class)
 	public void use_of_expectedExceptions02Test () {
 		homePage.use_of_expectedExceptions02();
 	}
@@ -415,7 +416,7 @@ public class HomePageTest extends BaseClass {
 		homePage.use_of_expectedExceptions03();
 	}
 	
-	@Test(expectedExceptions = org.openqa.selenium.NoSuchElementException.class)
+	@Test (expectedExceptions = NoSuchElementException.class)
 	public void use_of_expectedExceptions04Test () {
 		homePage.use_of_expectedExceptions03();
 	}
@@ -425,15 +426,24 @@ public class HomePageTest extends BaseClass {
 		homePage.new_user_registration_button_enabled();
 	}
 	
+	@Test
+	public void new_user_registration_button_disabled_test(){
+		homePage.new_user_registration_button_disabled();
+	}
+	
 	// Important interview question
 	// use of dependsOnMethods
 	// change the new_user_registration_button_enabled method to fail 
 	// and see the above method skipped as it depends on new_user_registration_button_enabled
 	
+	@Test (dependsOnMethods = "new_user_registration_button_enabled_test")
+	public void new_user_registration_button_click_pass_test() {
+		homePage.new_user_registration_button_click();
+	}
 	
-	@Test(dependsOnMethods = "new_user_registration_button_enabled_test")
-	public void newUserRegistrationButtonClickTest() {
-		homePage.newUserRegistrationButtonClick();
+	@Test (dependsOnMethods = "new_user_registration_button_disabled_test")
+	public void new_user_registration_button_click_fail_test() {
+		homePage.new_user_registration_button_click();
 	}
 	
 	@Test
@@ -446,29 +456,50 @@ public class HomePageTest extends BaseClass {
 		homePage.skipHomePageTitle02();
 	}
 	
-	// use of invocation count, when? -- if you know some test cases fail for no reason
+	// When we use invocation count? if you know some test cases fail for no reason
 	// and then you fix it, you can run more than one time time by invocation count	
+	// invocationCount = The invocationcount attribute tells how many times TestNG should run a test method
+	// timeOut = The maximum number of milliseconds a test case should take.
 	@Test(invocationCount = 5, timeOut = 10000)
+	public void getMethodsOfThePage05Test() {
+		homePage.getMethodsOfThePage05();
+	}
+	
+	// use of threadPoolSize
+	// Is the threadPoolSize working? No, because we need multiple thread in multiple device/computer connected
+	// may be working as multi threaded, can't see locally with one computer
+	// The threadPoolSize attribute tells it to form a thread pool to run the test method through multiple threads.
+	@Test(invocationCount = 6, threadPoolSize = 3, timeOut = 10000)
 	public void getMethodsOfThePage06Test() {
 		homePage.getMethodsOfThePage06();
 	}
 	
-	// use of threadPoolSize
-	//TODO Is the threadPoolSize working? No, because we need multiple thread in multiple device connected
-	// may be working as multi threaded, can't see, need to be make sure
-	@Test(invocationCount = 6, threadPoolSize = 3, timeOut = 10000)
-	public void getMethodsOfThePage07Test() {
-		homePage.getMethodsOfThePage07();
+	@Test()
+	public void logoDisplayed01Test() {
+		homePage.logoDisplayed01();
+	}
+	
+	@Test()
+	public void logoDisplayed02Test() {
+		homePage.logoDisplayed02();
+	}
+
+	@Test()
+	public void logoDisplayed03Test() {
+		homePage.logoDisplayed03();
+	}
+	
+	@Test()
+	public void logoDisplayed04Test() {
+		homePage.logoDisplayed04();
 	}
 	
 	
-	
-	
 	// Below we wrote the code directly in test cases, you will not find any code in HomePage
-	// interview question: what are the alternative of click(), 
+	// interview question: what are the alternative of click() method 
 	// but they are not expecting first 2 answer, they are looking for javascriptExecutor
 	// alternate of click()
-	@Test(enabled = false)
+	@Test
 	public void alternate_of_click_method_in_loginButtonTest01() throws InterruptedException {
 		driver.findElement(By.id("cms-login-submit")).sendKeys(Keys.ENTER);
 		Thread.sleep(3000);
@@ -476,7 +507,7 @@ public class HomePageTest extends BaseClass {
 	
 
 	// alternate of click()
-	@Test(enabled = false)
+	@Test
 	public void alternate_of_click_method_in_loginButtonTest02() throws InterruptedException {
 		driver.findElement(By.id("cms-login-submit")).sendKeys(Keys.RETURN);
 		Thread.sleep(3000);
@@ -485,7 +516,7 @@ public class HomePageTest extends BaseClass {
 	// Important interview question + they ask you to write the code in MS word
 	// so, practice it by paper pen, then in ms word
 	// alternate of click()
-	@Test(enabled = false)
+	@Test
 	public void alternate_of_click_method_in_loginButtonTest03() throws InterruptedException {
 		WebElement loginButton = driver.findElement(By.id("cms-login-submit"));
 		JavascriptExecutor js = (JavascriptExecutor) driver; // We don't need it here
@@ -500,7 +531,7 @@ public class HomePageTest extends BaseClass {
 	// follow the above one, because you can use any kind of locator 
 	// (specially xpath is difficult to create by below one)
 	// don't follow this one, but if you ever see it, i hope you can recognize it
-	@Test(enabled = false)
+	@Test
 	public void alternate_of_click_method_in_loginButtonTest04() throws InterruptedException {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("document.getElementById('cms-login-submit').click();");
@@ -557,12 +588,10 @@ public class HomePageTest extends BaseClass {
         // you use @SuppressWarnings("deprecation")
 		driver.get("https://www.ebay.com");	
 	}
-	
-	
-	 */
-	
-	
-	
+
+
+
+
 	
 	
 
