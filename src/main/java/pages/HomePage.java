@@ -14,8 +14,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
-import org.openqa.selenium.Dimension;
+import org.testng.SkipException;
 
 import constants.Attribute;
 
@@ -385,7 +384,7 @@ public class HomePage {
 	
 	// In real time scenario we do below test at the beginning of a page, 
 	// but by using common action, not by following below codes
-	public void getMethodsOfThePage() {
+	public void getMethodsOfThePage01() {
 		String actual = driver.getTitle();
 		System.out.println("Title of the Page is: " + actual); // this line is not necessary
 		String expected = "CMS Enterprise Portal";
@@ -1076,6 +1075,146 @@ public class HomePage {
 		System.out.println(cell.getText());
 		pause(3000);
 	}
+	
+	// regarding TestNG 
+	// use of groups
+	public void getMethodsOfThePage02() {
+		String actual = driver.getTitle();
+		System.out.println("Title name: "+ actual);
+		String expected = "CMS Enterprise Portal"; 
+		Assert.assertEquals(actual, expected, "Home Page Title doesn't match ....... ");
+	}
+	
+	public void getMethodsOfThePage03() {
+		String actual = driver.getTitle();
+		System.out.println("Title name: "+ actual);
+		String expected = "CMS Enterprise Portal"; 
+		Assert.assertEquals(actual, expected, "Home Page Title doesn't match ....... ");
+	}
+	
+	public void getMethodsOfThePage04() {
+		String actual = driver.getTitle();
+		System.out.println("Title name: "+ actual);
+		String expected = "CMS Enterprise Portal"; 
+		Assert.assertEquals(actual, expected, "Home Page Title doesn't match ....... ");
+	}
+	
+	public void use_of_expectedExceptions01 () {
+		System.out.println("We can verify whether a code throws the expected exception or not. Here it will fail");
+		int i = 1/0;	
+	}
+	
+	// same method of above
+	public void use_of_expectedExceptions02 () {
+		System.out.println("We can verify whether a code throws the expected exception or not. Here it will Pass");
+		int i = 1/0;	
+	}
+	
+	// cms login button [wrong element is used]
+	public void use_of_expectedExceptions03 () {
+		driver.findElement(By.id("xxs-login-submit")).click(); 
+		pause(4);
+	}
+	
+	// for test dependOnMethod()
+	public void new_user_registration_button_enabled(){
+		WebElement nur = driver.findElement(By.xpath("//a[contains(text(), 'New User Registration')]"));
+		boolean buttonEnabled = nur.isEnabled();			
+		System.out.println("Is the Button Enabled? Ans: "+ buttonEnabled);
+		Assert.assertTrue(true, "The New User Registration Button is disable .....");	
+	}
+	
+	public void new_user_registration_button_disabled(){
+		WebElement nur = driver.findElement(By.xpath("//a[text() = 'New User']"));
+		boolean buttonEnabled = nur.isEnabled();			
+		System.out.println("Is the Button Enabled? Ans: "+ buttonEnabled);
+		Assert.assertTrue(true, "The New User Registration Button is disable .....");	
+	}
+	
+	public void new_user_registration_button_click() {
+		driver.findElement(By.xpath("//a[contains(text(), 'New User Registration')]")).click();
+		pause(3000);
+		System.out.println(driver.getCurrentUrl());
+		System.out.println(driver.getTitle());
+	}
+	
+	// This test to explain the next one, it is not tested
+	public void nonSkipHomePageTitleTest() {
+		String actual = driver.getTitle();
+		System.out.println("Title name: "+ actual);
+		String expected = "CMS Enterprise Portal"; 
+		Assert.assertEquals(actual, expected, "Home Page Title doesn't match ....... ");
+		System.out.println("No need to skip the test");
+	}	
+	
+	// how to handle Exception: try, catch, throw, throws, finally
+	// below examples of where 'throw' is used
+	// Que: How to skip a test? Ans: by "throw new SkipException()" method
+	public void skipHomePageTitle01() {
+		String expected = "CMS Enterprise Portal";
+		if(expected.equals(driver.getTitle())) {
+			throw new SkipException("Skipping -- as the title matches as expected");
+			// if above condition is true, then no more below execution
+		} else {
+			System.out.println("Home Page Title doesn't match...");
+		}
+		System.out.println("I am out of the if else condition");
+	}
+	
+	public void skipHomePageTitle02() {
+		String expected = "      CMS Enterprise Portal"; // title will not match
+		if(expected.equals(driver.getTitle())) {
+			throw new SkipException("Skipping -- as the title matches as expected");
+		} else {
+			System.out.println("Home Page Title doesn't match...");
+		}
+		System.out.println("I am out of the if else condition");
+	}
+	
+	public void getMethodsOfThePage05() {
+		String actual = driver.getTitle();
+		System.out.println("Title name: "+ actual);
+		String expected = "CMS Enterprise Portal"; 
+		Assert.assertEquals(actual, expected, "Home Page Title doesn't match ....... ");
+	}
+	
+	public void getMethodsOfThePage06() {
+		String actual = driver.getTitle();
+		System.out.println("Title name: "+ actual);
+		String expected = "CMS Enterprise Portal"; 
+		Assert.assertEquals(actual, expected, "Home Page Title doesn't match ....... ");
+		System.out.println("Thread: "+ Thread.currentThread().getName()); 
+		// to know which thread is running
+	}
+	
+	// Learning Assertion
+	public void logoDisplayed01() {
+		elementDisplayed(logo); // Actual outcome from selenium method
+		Assert.assertTrue(true); // Expected outcome
+	}
+	
+	public void logoDisplayed02() {
+		elementDisplayed(logo); // Actual Result or outcome which doesn't match with your below expectation
+		Assert.assertTrue(false); // Expected Result // java.lang.AssertionError: expected [true] but found [false]
+		// Although the outcome is true, but because of difference between expected vs actual is not same, the test case failed
+	}
+	
+	public void logoDisplayed03() {
+		elementDisplayed(logo); // Actual outcome from selenium method
+		// Assert.assertTrue(false, "Expected vs actual doesn't match"); // Expected outcome
+		// Assert.assertTrue(true, "Application Logo is not displayed"); // This error message will appear if failed
+		Assert.assertFalse(false, "Application Logo is not displayed"); // false false means true		
+	}
+	
+	public void logoDisplayed04() {
+		elementDisplayed(logo); // Actual outcome from selenium method
+		Assert.assertFalse(true, "Expected vs actual doesn't match"); // false false means true, False true means false, so failed		
+	}
+		
+	
+	
+
+
 
 
 
